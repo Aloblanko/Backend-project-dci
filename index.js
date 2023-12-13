@@ -1,11 +1,25 @@
 import { config } from "dotenv";
 import express, { json } from "express";
 import cors from "cors";
+import {
+    mongoConenctLister,
+    mongoConnect,
+    mongoDisconenctLister,
+    mongoErrorListener,
+} from "./configs/db.connect.js";
+import { userRouter } from "./routes/user.route.js";
+import { uploadRouter } from "./routes/upload.route.js";
+import cookieParser from "cookie-parser";
 
 config();
 
+mongoErrorListener();
+mongoConenctLister();
+mongoDisconenctLister();
+await mongoConnect();
 
 const app = express();
+app.use(cookieParser());
 app.use(json());
 app.use(
     cors({
@@ -38,4 +52,3 @@ app.use((err, req, res, next) => {
 app.listen(process.env.PORT, () => {
     console.log(`Server started on PORT: ${process.env.PORT}`);
 });
-
